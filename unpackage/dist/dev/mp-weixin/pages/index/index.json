@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "uni-app",
+  "onReachBottomDistance": 50,
+  "usingComponents": {
+    "uni-popup": "/components/uni-popup/uni-popup"
+  }
+}

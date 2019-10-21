@@ -1,0 +1,53 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/index/make",
+    "pages/template/template",
+    "pages/works/works",
+    "pages/mine/mine"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#8cb8e7",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/images/index.jpg",
+        "selectedIconPath": "static/images/indexActive.jpg",
+        "selectedColor": "#708dd3",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/template/template",
+        "iconPath": "static/images/template.jpg",
+        "selectedIconPath": "static/images/templateActive.jpg",
+        "selectedColor": "#708dd3",
+        "text": "模板"
+      },
+      {
+        "pagePath": "pages/works/works",
+        "iconPath": "static/images/works.jpg",
+        "selectedIconPath": "static/images/worksActive.jpg",
+        "selectedColor": "#708dd3",
+        "text": "作品"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "iconPath": "static/images/mine.jpg",
+        "selectedIconPath": "static/images/mineActive.jpg",
+        "selectedColor": "#708dd3",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap89.json"
+}

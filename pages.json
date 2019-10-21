@@ -1,0 +1,75 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				// 上拉触底的距离
+				"onReachBottomDistance":50
+				
+			}
+		},{
+			"path": "pages/index/make",
+			"style": {
+				"navigationBarTitleText": "右糖"
+			}
+		},
+		{
+			"path": "pages/template/template",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		},{
+			"path": "pages/works/works",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		},{
+			"path": "pages/mine/mine",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar":{
+		"color":"#999999" ,
+		"selectedColor":"#8cb8e7",
+		"backgroundColor":"#fff",
+		"list":[
+			{
+				"pagePath":"pages/index/index",
+				"iconPath":"static/images/index.jpg",
+				"selectedIconPath":"static/images/indexActive.jpg",
+				"selectedColor":"#708dd3",
+				"text":"首页"
+			},
+			{
+				"pagePath":"pages/template/template",
+				"iconPath":"static/images/template.jpg",
+				"selectedIconPath":"static/images/templateActive.jpg",
+				"selectedColor":"#708dd3",
+				"text":"模板"
+			},
+			{
+				"pagePath":"pages/works/works",
+				"iconPath":"static/images/works.jpg",
+				"selectedIconPath":"static/images/worksActive.jpg",
+				"selectedColor":"#708dd3",
+				"text":"作品"
+			},
+			{
+				"pagePath":"pages/mine/mine",
+				"iconPath":"static/images/mine.jpg",
+				"selectedIconPath":"static/images/mineActive.jpg",
+				"selectedColor":"#708dd3",
+				"text":"我的"
+			}
+		]
+	}
+}
