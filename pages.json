@@ -17,7 +17,8 @@
 		{
 			"path": "pages/template/template",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "uni-app",
+				"onReachBottomDistance":50
 			}
 		},{
 			"path": "pages/works/works",

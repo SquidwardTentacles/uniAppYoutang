@@ -1,7 +1,7 @@
 <template>
 	<view class="mine-box">
 		<view class="login-box">
-			<view class="login-linner">
+			<view class="login-linner" @click="login">
 				
 			</view>
 		</view>
@@ -29,6 +29,25 @@
 					{label:'关于我们',icon:'about.jpg'},
 					{label:'设置	',icon:'setting.jpg'}
 				]
+			}
+		},
+		methods:{
+			login() {
+				wx.login({
+				  success (res) {
+				    if (res.code) {
+				      //发起网络请求
+				      wx.request({
+				        url: 'https://test.com/onLogin',
+				        data: {
+				          code: res.code
+				        }
+				      })
+				    } else {
+				      console.log('登录失败！' + res.errMsg)
+				    }
+				  }
+				})
 			}
 		}
 	}

@@ -24,18 +24,7 @@
       <text v-for="(item,index) in listArr" :key="index">{{item.label}}</text>
     </view>
 	<!-- 视频展示 --> 
-	<view class="template-show flexbox">
-		<view class="list-box flexbox a-start" v-for="(item,index) in videoListArr" :key="index">
-			<view class="inner-box-video">
-				<navigator :url="'./make?item='+item.theme_id+'&title='+item.title">
-						<image :src="item.cover_url" mode=""></image>
-						<view class="title">
-							{{item.title}}
-						</view>
-				</navigator>
-			</view>
-		</view>
-	</view>
+	<video-list :currentPage="page"></video-list>
 	<!-- 弹出框 -->
 	<uni-popup ref="popup" type="center">{{dialogContent}}</uni-popup>
   </view>
@@ -43,8 +32,9 @@
 
 <script>
 import uniPopup from "@/components/uni-popup/uni-popup.vue"
+import videoList from '@/components/videoList.vue'
 export default {
-components: {uniPopup},
+components: {uniPopup,videoList},
   data () {
     return {
       swiperList: [],
@@ -61,7 +51,6 @@ components: {uniPopup},
 		  {label:'毕业留念'},
 		  {label:'通用'}
 	  ],
-	  videoListArr:[],
 	  // 弹出层内容 
 	  dialogContent:'',
 	  page:1,
@@ -69,19 +58,16 @@ components: {uniPopup},
 	  baseUrl : getApp().globalData.baseUrl
     }
   },
-  onLoad () {
+  mounted () {
    this.onloadFunc()
   },
   // 上拉触底事件
   onReachBottom() {
 	  this.page++
-	  this.getVideoList()
-	  
   },
   methods: {
 	onloadFunc() {
 	  // 获取轮播图图片
-	  
 		uni.request({
 		  url: this.baseUrl + '/api/activity',
 		  success: res => {
@@ -90,29 +76,12 @@ components: {uniPopup},
 		    }
 		  },
 		  fail: err => {
-		    console.log(err);
 			this.dialogContent = '请求异常，请稍后重试'
 				this.$refs.popup.open()
 		
 		  }
 		})
-		// 获取页面视频 
-		this.getVideoList()
 	},
-	getVideoList() {
-		uni.request({
-			url:this.baseUrl+`/api/themes?language=zh&per_page=12&page=${this.page}`,
-			success:res=>{
-				console.log(res)
-				if(res.data.status==='1') {
-					this.videoListArr = this.videoListArr.concat(res.data.data.list)
-				}
-			},
-			fail:err=>{
-				console.log(err)
-			}
-		})
-	}
   }
 }
 </script>

@@ -222,7 +222,7 @@ exports.getImgUrl = (req, res) => {
 
   fs.readdir(dirImgPath, (err, files) => {
     if (err) {
-      console.log(err);
+      console.log('err');
       return;
     }
     let filePath = '';
@@ -238,53 +238,54 @@ exports.getImgUrl = (req, res) => {
       }
     });
 
-    //   // 返回base64文件
-    //   if (!hsFile) {
-    //     res.end(
-    //       JSON.stringify({
-    //         errCode: '1',
-    //         message: '未找到图片'
-    //       })
-    //     );
-    //     return;
-    //   }
-    //   fs.readFile(filePath, (err, data) => {
-    //     if (err) console.log(err);
-    //     let base64 = new Buffer(data).toString('base64');
-    //     // 拼接头部信息
-    //     base64 =
-    //       `data:${fileDirType}/${
-    //         files[0].split('.')[files[0].split('.').length - 1]
-    //       };base64,` + base64.replace(/=+$/, '');
-    //     res.end(
-    //       JSON.stringify({
-    //         imgurl: base64,
-    //         errCode: '0'
-    //       })
-    //     );
-    //   });
+      // 返回base64文件
+      if (!hsFile) {
+        res.end(
+          JSON.stringify({
+            errCode: '1',
+            message: '未找到图片'
+          })
+        );
+        return;
+      }
+      fs.readFile(filePath, (err, data) => {
+        if (err) console.log(err);
+        let base64 = new Buffer(data).toString('base64');
+        // 拼接头部信息
+        base64 =
+          `data:${fileDirType}/${
+            files[0].split('.')[files[0].split('.').length - 1]
+          };base64,` + base64.replace(/=+$/, '');
+		  console.log('back')
+        res.end(
+          JSON.stringify({
+            imgurl: base64,
+            errCode: '0'
+          })
+        );
+      });
 
-    let pathUrl = '';
-    let resObj = {};
-    if (hsFile) {
-      pathUrl = 'http://192.168.1.4:3000/static/image/' + fileName;
-      resObj = {
-        errCode: '0',
-        imgUrl: pathUrl
-      };
-    } else {
-      resObj = {
-        errCode: '1',
-        message: '未找到文件'
-      };
-    }
-    console.log(path.join(__dirname, '../static/image/') + fileName);
+    // let pathUrl = '';
+    // let resObj = {};
+    // if (hsFile) {
+    //   pathUrl = 'http://192.168.1.4:3000/static/image/' + fileName;
+    //   resObj = {
+    //     errCode: '0',
+    //     imgUrl: pathUrl
+    //   };
+    // } else {
+    //   resObj = {
+    //     errCode: '1',
+    //     message: '未找到文件'
+    //   };
+    // }
+    // console.log(path.join(__dirname, '../static/image/') + fileName);
 
-    res.send(
-      JSON.stringify({
-        resObj
-      })
-    );
+    // res.send(
+    //   JSON.stringify({
+    //     resObj
+    //   })
+    // );
     // res.writeHead(200, { 'Content-Type': 'image/jpg' });
     // res.end(JSON.stringify(resObj));
   });

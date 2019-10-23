@@ -1,104 +1,87 @@
 <template name="index">
   <view class='content'>
-   <!-- <view class='uni-padding-wrap'>
-      <view class='page-section swiper'>
-        <view class='page-section-spacing'>
-          <swiper class='swiper'
-                  autoplay='true'
-                  circular='true'>
-            <swiper-item v-for="(item,index) in swiperList"
-                         :key="index">
-              <view class='swiper-item'>
-                <image :src='item.url'
-                       mode='scaleToFill'
-                       lazy-load='false'>
-                </image>
-              </view>
-            </swiper-item>
-          </swiper>
-        </view>
-      </view>
-    </view> -->
-    <!-- 全部 潮流时尚 婚礼爱情 商业宣传 家庭相册 生日祝福 节日问候 旅行时光 晚会典礼 毕业留念 通用 -->
-<!--    <view class='scoll-view'>
-      <text v-for="(item,index) in listArr" :key="index">{{item.label}}</text>
-    </view> -->
 	<!-- 视频展示 --> 
 	<view class="template-show flexbox">
 		<view class="list-box flexbox a-start" v-for="(item,index) in videoListArr" :key="index">
-			<view class="inner-box-video">
-				<navigator :url="'./make?item='+item.theme_id+'&title='+item.title">
+			<view class="inner-box-video"  @click="openPopup(item.theme_id,item.title)">
+				<!-- <navigator :url="'./make?item='+item.theme_id+'&title='+item.title"> -->
 						<image :src="item.cover_url" mode=""></image>
 						<view class="title">
 							{{item.title}}
 						</view>
-				</navigator>
+				<!-- </navigator> -->
 			</view>
 		</view>
 	</view>
 	<!-- 弹出框 -->
-	<uni-popup ref="popup" type="center">{{dialogContent}}</uni-popup>
+	<uni-popup ref="popup" type="bottom">
+		<view class="make">
+			<view class="video-title">
+				<text>{{videoTitle}}</text>
+			</view>
+			<view class="choose-img">
+				<image :src="imgUrl" mode="" v-if="!errMeage&&imgUrl"></image>
+				<view class="errShow flexbox" v-else>{{errMeage}}</view>
+			</view>
+			<view class="video-sesson">
+				<view class="time-out">
+					<text>时长不限</text>
+				</view>
+				<view class="time-out write">
+					<text>支持图片、视频、文字</text>
+				</view>
+				 <view class="picker-box flexbox j-start">
+					<view class="uni-list-cell-db">
+						<picker @change="bindPickerChange" :value="index" :range="array">
+							<view class="uni-input">{{array[index]}}</view>
+						</picker>
+					</view>
+				 </view>
+				 <button type="primary" class="free-make" @click="makeVideo">免费制作</button>
+			</view>
+		</view>
+	</uni-popup>
   </view>
 </template>
 
 <script>
 import uniPopup from "@/components/uni-popup/uni-popup.vue"
 export default {
-components: {uniPopup},
+	name:'videoList',
+	components: {uniPopup},
+	props:{
+		currentPage:''
+	},
+	watch:{
+		currentPage() {
+			this.page++
+			this.getVideoList()
+		}
+	},
   data () {
     return {
-      swiperList: [],
-	  listArr:[
-		  {label:'全部'},
-		  {label:'潮流时尚'},
-		  {label:'婚礼爱情'},
-		  {label:'商业宣传'},
-		  {label:'家庭相册'},
-		  {label:'生日祝福'},
-		  {label:'节日问候'},
-		  {label:'旅行时光'},
-		  {label:'晚会典礼'},
-		  {label:'毕业留念'},
-		  {label:'通用'}
-	  ],
 	  videoListArr:[],
-	  // 弹出层内容 
-	  dialogContent:'',
 	  page:1,
 	  // 请求基地址
-	  baseUrl : getApp().globalData.baseUrl
+	  baseUrl : getApp().globalData.baseUrl,
+	  
+	  imgUrl:'',
+	  videoTitle:'',
+	  array: ['16:9(横屏)', '1:1(方屏)', '9:16(竖屏)'],
+	  index: 0,
+	  errMeage:''
     }
   },
-  onShow () {
-   this.onloadFunc()
+  mounted () {
+   this.getVideoList()
+   this.page = this.currentPage
   },
   // 上拉触底事件
   onReachBottom() {
 	  this.page++
 	  this.getVideoList()
-	  
   },
   methods: {
-	onloadFunc() {
-	  // 获取轮播图图片
-	  
-		uni.request({
-		  url: this.baseUrl + '/api/activity',
-		  success: res => {
-		    if (res.data.status === '1') {
-		      this.swiperList = res.data.data.list
-		    }
-		  },
-		  fail: err => {
-		    console.log(err);
-			this.dialogContent = '请求异常，请稍后重试'
-				this.$refs.popup.open()
-		
-		  }
-		})
-		// 获取页面视频 
-		this.getVideoList()
-	},
 	getVideoList() {
 		uni.request({
 			url:this.baseUrl+`/api/themes?language=zh&per_page=12&page=${this.page}`,
@@ -112,7 +95,53 @@ components: {uniPopup},
 				console.log(err)
 			}
 		})
-	}
+	},
+	// 打开弹出层
+	 openPopup(id,title){
+		 this.imgUrl = id
+		 this.videoTitle = title
+		 this.getImgUrl(id)
+		this.$refs.popup.open()
+	 },
+	 bindPickerChange: function(e) {
+	    console.log('picker发送选择改变，携带值为', e.target.value)
+	     this.index = e.target.value
+	         },
+	 getImgUrl(id) {
+	 	uni.request({
+	 		url:'http://192.168.1.4:3000/getImgUrl?fileType=image&id='+id,
+	 		success:res=>{
+	 			console.log(res)
+	 			this.imgUrl = res
+	 				if(res.data.errCode==='0') {
+	 					this.imgUrl = res.data.imgurl
+	 					this.errMeage = ''
+	 				}else {
+	 					console.log('err')
+	 					this.errMeage = res.data.message
+	 					this.imgUrl = ''
+	 				}
+	 		},
+	 		fail:err=>{
+	 			console.log(err)
+	 		}
+	 	})
+	 },
+	 makeVideo() {
+	 	wx.getSetting({
+	 	  success(res) {
+	 	    if (!res.authSetting['scope.record']) {
+	 	      wx.authorize({
+	 	        scope: 'scope.record',
+	 	        success () {
+	 	          // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
+	 	          wx.startRecord()
+	 	        }
+	 	      })
+	 	    }
+	 	  }
+	 	})
+	 }
   }
 }
 </script>
@@ -124,21 +153,7 @@ components: {uniPopup},
   // align-items: center;
   // justify-content: center;
   height:100% ;
-	.uni-padding-wrap {
-	  width: 100%;
-	  padding:10rpx ;
-	  box-sizing:border-box ;
-	  .swiper {
-	  border-radius: 10rpx;
-	  overflow: hidden;
-		  
-	  }
-	   image,
-	  .swiper-item {
-		  width:100%;
-		height: 100%;
-	  }
-	}
+	
 	.scoll-view {
 	  white-space: nowrap;
 	  padding: 5px 0 0 0;
@@ -189,6 +204,64 @@ components: {uniPopup},
 						text-align: center;
 					}
 				}
+		}
+	}
+	.make {
+		.video-title {
+			text-align: center;
+			font-size: 28rpx;
+			margin:5px 0 ;
+		}
+		.choose-img {
+			width:95% ;
+			margin:0 auto ;
+			overflow: hidden;
+			image {
+			border-radius: 5px;
+				width:100% ;
+				max-height:400rpx ;
+			}
+			.errShow {
+				width:100% ;
+				height:400rpx ;
+			}
+		}
+		.video-sesson {
+			padding:0 10px ;
+			box-sizing:border-box ;
+			margin-top:10px ;
+			font-size:28rpx ;
+			.time-out {
+				background: url('~@/static/images/timeOut.jpg') left center no-repeat;
+				background-size: 40rpx 40rpx;
+				padding-left:50rpx ;
+				box-sizing:border-box ;
+				margin-bottom: 15px;
+				height:45rpx ;
+				line-height: 45rpx;
+				white-space: nowrap;
+				&.write {
+					background-image:url('~@/static/images/writeIcon.jpg');
+				}
+			}
+			.picker-box {
+				height:65rpx ;
+				padding-left:20rpx ;
+				box-sizing:border-box ;
+				border:1px solid #ccc ;
+				background:#f7f7f7 ;
+				.uni-list-cell-db {
+					width:100% ;
+					.uni-input {
+						width:100% ;
+					}
+				}
+			}
+			.free-make {
+				height:100rpx ;
+				background:linear-gradient(to right,#568cf9,#ff9ad4);
+				margin-top:20px ;
+			}
 		}
 	}
 }

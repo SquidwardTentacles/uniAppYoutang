@@ -28,41 +28,52 @@
 			</view>
 		</view>
 		<view class="video-list">
-			<videoList></videoList>
+			<video-list :currentPage="page"></video-list>
 		</view>
+		<!-- 弹出层 -->
+		<uni-popup ref="popup" type="bottom"></uni-popup>
 	</view>
 </template>
 
 <script>
-import videoList from '@/components/videoList.vue'
+import videoList from '@/components/videoList.vue';
 export default {
-components:{videoList},
+	components: {
+				videoList
+			},
 	data() {
-			return {
-				navList: [
-					{label:'全部'},
-					{label:'潮流时尚'},
-					{label:'婚礼爱情'},
-					{label:'商业宣传'},
-					{label:'家庭相册'},
-					{label:'生日祝福'},
-					{label:'节日问候'},
-					{label:'旅行时光'},
-					{label:'晚会典礼'},
-					{label:'毕业留念'},
-					{label:'通用'}
-				],
-				navTitleShow:false,
-				navlistId:0
-			}
-		},
-		methods:{
-			navListClick(i) {
-				this.navlistId=i
-			}
-			
+		return {
+			navList: [
+				{label:'全部'},
+				{label:'潮流时尚'},
+				{label:'婚礼爱情'},
+				{label:'商业宣传'},
+				{label:'家庭相册'},
+				{label:'生日祝福'},
+				{label:'节日问候'},
+				{label:'旅行时光'},
+				{label:'晚会典礼'},
+				{label:'毕业留念'},
+				{label:'通用'}
+			],
+			navTitleShow:false,
+			navlistId:0,
+			page:0
 		}
-	}
+	},
+	methods:{
+		navListClick(i) {
+			this.navlistId=i
+		}
+		
+	},
+	// 上拉触底事件
+	onReachBottom() {
+		console.log('触底')
+		  this.page++
+		  // this.getVideoList()
+	},
+}
 </script>
 
 <style scoped lang="less">
